@@ -1,2 +1,0 @@
-# ari_shop
-WEBSITE
