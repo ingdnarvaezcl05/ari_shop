@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>P&M Urban Fresh - Tienda Online</title>
+  <style>
+    /* Reset básico */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #fff7f0;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      background: white;
+      border-bottom: 1px solid #e0e0e0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .header-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-circle {
+      background-color: #ff6600;
+      color: white;
+      font-weight: 700;
+      font-size: 1.25rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #ff6600;
+    }
+
+    .nav a {
+      margin-left: 1.5rem;
+      text-decoration: none;
+      color: #333;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .nav a:hover {
+      color: #ff6600;
+    }
+
+    .cart-button {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      position: relative;
+      cursor: pointer;
+      color: #ff6600;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -10px;
+      background-color: #ff6600;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(90deg, #ff6600 0%, #ff8533 100%);
+      color: white;
+      padding: 4rem 0;
+      text-align: center;
+    }
+
+    .hero h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn {
+      cursor: pointer;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-weight: 700;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-primary {
+      background-color: white;
+      color: #ff6600;
+    }
+
+    .btn-primary:hover {
+      background-color: #ffe6cc;
+    }
+
+    /* Main */
+    .main-container {
+      padding: 3rem 0;
+    }
+
+    .main-container h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      color: #ff6600;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 2rem;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .product-card:hover {
+      box-shadow: 0 4px 16px rgb(0 0 0 / 0.15);
+    }
+
+    .product-card img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      object-fit: cover;
+    }
+
+    .product-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.25rem;
+      color: #333;
+    }
+
+    .category {
+      font-size: 0.9rem;
+      color: #777;
+      margin-bottom: 0.5rem;
+    }
+
+    .price {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ff6600;
+      margin-bottom: 1rem;
+    }
+
+    .btn-add-cart {
+      background-color: #ff6600;
+      color: white;
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 4px;
+      font-weight: 700;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-add-cart:hover {
+      background-color: #e65500;
+    }
+
+    /* Cart Sidebar */
+    .cart-sidebar {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 350px;
+      height: 100vh;
+      background: white;
+      box-shadow: -4px 0 12px rgba(0,0,0,0.15);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      transition: right 0.3s ease;
+      z-index: 1100;
+    }
+
+    .cart-sidebar.open {
+      right: 0;
+    }
+
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .cart-header h3 {
+      font-size: 1.5rem;
+      color: #ff6600;
+    }
+
+    .close-cart {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #ff6600;
+    }
+
+    .cart-items {
+      flex-grow: 1;
+      overflow-y: auto;
+    }
+
+    .empty-cart {
+      text-align: center;
+      color: #999;
+      margin-top: 2rem;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 0.5rem;
+    }
+
+    .cart-item-info {
+      flex-grow: 1;
+    }
+
+    .cart-item-name {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .cart-item-price {
+      color: #ff6600;
+      font-weight: 700;
+      margin-top: 0.25rem;
+    }
+
+    .remove-item {
+      background: none;
+      border: none;
+      color: #ff3300;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 1.25rem;
+      margin-left: 0.5rem;
+    }
+
+    .cart-footer {
+      border-top: 1px solid #eee;
+      padding-top: 1rem;
+      text-align: right;
+    }
+
+    .cart-footer p {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ff6600;
+      margin-bottom: 1rem;
+    }
+
+    .btn-checkout {
+      width: 100%;
+      background-color: #ff6600;
+      color: white;
+      padding: 0.75rem;
+      border-radius: 4px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-checkout:disabled {
+      background-color: #ffcc99;
+      cursor: not-allowed;
+    }
+
+    .btn-checkout:hover:not(:disabled) {
+      background-color: #e65500;
+    }
+
+    /* Cart overlay */
+    .cart-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 1050;
+    }
+
+    .cart-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Footer */
+    .footer {
+      background-color: #fff3e6;
+      padding: 3rem 0 1rem;
+      color: #333;
+    }
+
+    .footer-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: space-between;
+    }
+
+    .footer-container > div {
+      flex: 1 1 250px;
+    }
+
+    .footer-container h4 {
+      color: #ff6600;
+      margin-bottom: 1rem;
+    }
+
+    .footer-container ul {
+      list-style: none;
+    }
+
+    .footer-container ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-container ul li a {
+      color: #333;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-container ul li a:hover {
+      color: #ff6600;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #999;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav {
+        display: none;
+      }
+
+      .header-container {
+        justify-content: space-between;
+      }
+
+      .products-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container header-container">
+      <div class="logo">
+        <div class="logo-circle">P&M</div>
+        
+        <h1>P&M Urban Fresh</h1>
+      </div>
+      <nav class="nav">
+        <a href="#">Inicio</a>
+        <a href="#">Hombre</a>
+        <a href="#">Mujer</a>
+        <a href="#">Accesorios</a>
+      </nav>
+      <button id="cart-button" aria-label="Abrir carrito" class="cart-button">
+        🛒 <span id="cart-count" class="cart-count">0</span>
+      </button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-container">
+      <h2>Estilo Urbano con Actitud</h2>
+      <p>Descubre la nueva colección de P&M Urban Fresh. Ropa que define tu estilo y comodidad.</p>
+      <button class="btn btn-primary">Ver Colección</button>
+    </div>
+  </section>
+
+  <main class="container main-container">
+    <h2>Productos Destacados</h2>
+    <div class="products-grid">
+      <article class="product-card" data-name="Camiseta RLPH" data-price="1200.00">
+        <img src="ralphlaurentshirt.png" alt="Camiseta Oversize Naranja" />
+        <h3>Camiseta Polo Ralph Lauren Hombre</h3>
+        <p class="category">Camisetas</p>
+        <p class="price">$1200.00 MXN </p>
+        <button class="btn btn-add-cart">Añadir al Carrito</button>
+      </article>
+
+      <article class="product-card" data-name="Sudadera Mujer Tommy" data-price="1000.00">
+        <img src="tommymujer.png" alt="Sudadera Mujer Tommy" />
+        <h3>Sudadera Tommy Hilfiger Mujer</h3>
+        <p class="category">Sudaderas</p>
+        <p class="price">$1000.00 MXN</p>
+        <button class="btn btn-add-cart">Añadir al Carrito</button>
+      </article>
+
+      <article class="product-card" data-name="Pantalones AE" data-price="700.00">
+        <img src="pantalonae.png" alt="Pantalones Cargo Modernos" />
+        <h3>Pantalones AE Next </h3>
+        <p class="category">Pantalones</p>
+        <p class="price">$700.00 MXN </p>
+        <button class="btn btn-add-cart">Añadir al Carrito</button>
+      </article>
+
+      <article class="product-card" data-name="Vestido Tommy" data-price="500.00">
+        <img src="vestidotommy.jpg" alt="Vestido Tommy" />
+        <h3>Vestido Tommy Hilfiger Mujer Casual</h3>
+        <p class="category">Vestidos</p>
+        <p class="price">$500.00</p>
+        <button class="btn btn-add-cart">Añadir al Carrito</button>
+      </article>
+
+      <article class="product-card" data-name="Pantalon AE" data-price="650.00">
+        <img src="pantalonaeh.jpg" alt="Pantalon AE" />
+        <h3>Pantalon American Eagle Hombre Airflex</h3>
+        <p class="category">Pantalones</p>
+        <p class="price">$650.00</p>
+        <button class="btn btn-add-cart">Añadir al Carrito</button>
+      </article>
+
+      <article class="product-card" data-name="Zapatillas Alexander Mcqueen" data-price="2000.00">
+        <img src="Alexander-blue.png" alt="Zapatillas Alexander Mcqueen" />
+        <h3>Tenis Alexander Mcqueen Paris Blue  </h3>
+        <p class="category">Zapatos</p>
+        <p class="price">$2000.00</p>
+        <button class="btn btn-add-cart">Añadir al Carrito</button>
+      </article>
+    </div>
+  </main>
+
+  <aside id="cart-sidebar" class="cart-sidebar" aria-label="Carrito de compras">
+    <div class="cart-header">
+      <h3>Tu Carrito</h3>
+      <button id="close-cart" aria-label="Cerrar carrito" class="close-cart">✕</button>
+    </div>
+    <div id="cart-items" class="cart-items">
+      <p class="empty-cart">Tu carrito está vacío</p>
+    </div>
+    <div class="cart-footer">
+      <p>Total: $<span id="cart-total">0.00</span></p>
+      <button class="btn btn-primary btn-checkout" disabled>Proceder al Pago</button>
+    </div>
+  </aside>
+
+  <div id="cart-overlay" class="cart-overlay"></div>
+
+  <footer class="footer">
+    <div class="container footer-container">
+      <div>
+        <h4>P&M Urban Fresh</h4>
+        <p>Ropa urbana de calidad con estilo fresco y moderno para el día a día.</p>
+      </div>
+      <div>
+        <h4>Enlaces Rápidos</h4>
+        <ul>
+          <li><a href="#">Sobre Nosotros</a></li>
+          <li><a href="#">Contacto</a></li>
+          <li><a href="#">Términos y Condiciones</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <p>info@pmurbanfresh.com</p>
+        <p>+52 5675432490</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 P&M Urban Fresh. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    const cartButton = document.getElementById('cart-button');
+    const cartSidebar = document.getElementById('cart-sidebar');
+    const cartOverlay = document.getElementById('cart-overlay');
+    const closeCartButton = document.getElementById('close-cart');
+    const cartItemsContainer = document.getElementById('cart-items');
+    const cartCount = document.getElementById('cart-count');
+    const cartTotal = document.getElementById('cart-total');
+    const checkoutButton = document.querySelector('.btn-checkout');
+
+    let cart = [];
+
+    function openCart() {
+      cartSidebar.classList.add('open');
+      cartOverlay.classList.add('active');
+    }
+
+    function closeCart() {
+      cartSidebar.classList.remove('open');
+      cartOverlay.classList.remove('active');
+    }
+
+    function updateCartUI() {
+      cartCount.textContent = cart.length;
+      if (cart.length === 0) {
+        cartItemsContainer.innerHTML = '<p class="empty-cart">Tu carrito está vacío</p>';
+        checkoutButton.disabled = true;
+        cartTotal.textContent = '0.00';
+        return;
+      }
+
+      checkoutButton.disabled = false;
+
+      cartItemsContainer.innerHTML =
